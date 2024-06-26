@@ -647,7 +647,7 @@ function recurse(obj, parent, callback, depthFirst) {
 }
 
 module.exports = {
-    getJsonSchema: function getJsonSchema(src, title, outputAttrPrefix, laxURIs, newXsPrefix) { // TODO convert to options parameter
+    getJsonSchema: function getJsonSchema(src, title, outputAttrPrefix, laxURIs, newXsPrefix, rootElementName) { // TODO convert to options parameter
         reset(outputAttrPrefix, laxURIs, newXsPrefix);
 
         for (let p in src) {
@@ -707,9 +707,12 @@ module.exports = {
 
         var rootElement = src[xsPrefix + "schema"][xsPrefix + "element"];
         if (Array.isArray(rootElement)) {
+            if (rootElementName !== undefined && rootElementName !== null && rootElementName !== '') {
+                rootElement.unshift(rootElement.splice(rootElement.findIndex(e => e["@name"] === rootElementName), 1)[0])
+            }
             rootElement = rootElement[0];
         }
-        var rootElementName = rootElement["@name"];
+        rootElementName = rootElement["@name"];
 
         obj.type = 'object';
         obj.properties = clone(rootElement);
