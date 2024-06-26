@@ -708,7 +708,10 @@ module.exports = {
         var rootElement = src[xsPrefix + "schema"][xsPrefix + "element"];
         if (Array.isArray(rootElement)) {
             if (rootElementName !== undefined && rootElementName !== null && rootElementName !== '') {
-                rootElement.unshift(rootElement.splice(rootElement.findIndex(e => e["@name"] === rootElementName), 1)[0])
+                var rootElementIndex = rootElement.findIndex(e => e["@name"] === rootElementName);
+                if (rootElementIndex >= 0) {
+                    rootElement.unshift(rootElement.splice(rootElementIndex, 1)[0]);
+                }
             }
             rootElement = rootElement[0];
         }
